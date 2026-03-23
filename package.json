@@ -1,0 +1,23 @@
+{
+  "name": "@liquidityio/genesis",
+  "version": "1.0.0",
+  "description": "Liquidity L1 genesis tooling — Substrate state export, EVM genesis generation",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "export": "tsx scripts/export-substrate.ts",
+    "export:prod": "tsx scripts/export-substrate.ts --rpc wss://mainnet.liquidity.io",
+    "export:testnet": "tsx scripts/export-substrate.ts --rpc wss://testnet.liquidity.io",
+    "verify": "tsx scripts/verify-export.ts",
+    "genesis": "tsx scripts/generate-evm-genesis.ts"
+  },
+  "dependencies": {
+    "ws": "^8.16.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/ws": "^8.5.10",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.0"
+  }
+}
