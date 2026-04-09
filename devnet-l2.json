@@ -1,0 +1,30 @@
+{
+  "network": "Liquidity",
+  "networkId": 3,
+  "chainNetworkId": "QAnjVNZPWL7UX8qhbJ2Y4ADyJUoVjbBAaBphe6ajBc6YW4EyG",
+  "validators": 5,
+  "chains": {
+    "liquidevm": {
+      "name": "LiquidEVM",
+      "blockchainId": "2Yvym21skpeLMMhbiSateodDCzM5GPpjNq2xEWuXTzCJxuYYTC",
+      "vmId": "2n2njofjYvece8gZWCNnc1mqkcqfW6kbrhPRZPVzwxrSQrQ4gE",
+      "chainId": 8675311
+    },
+    "liquiddex": {
+      "name": "LiquidDEX",
+      "blockchainId": "fuQP6UFQnz7nFMD4AJFN37fkNET51XYwqz6Xzv5Ri3KGX6ZfA",
+      "vmId": "2suTB5SYzirqHipYPzDvc9ftHnT4P6DqhrLyUyGpaye4aBzHm4"
+    },
+    "liquidfhe": {
+      "name": "LiquidFHE",
+      "blockchainId": "QYRESBcAWFpW173hmvKPpdQJzJP4qBXaeoM9pk5fpzD6TenBw",
+      "vmId": "tGVBwRxpmD2aFdg3iYjgRvrCe8Jcmq9UNKxyHMus2NZ8WcD8t"
+    }
+  },
+  "rpc": {
+    "evm": "https://rpc.dev.satschel.com/ext/bc/2Yvym21skpeLMMhbiSateodDCzM5GPpjNq2xEWuXTzCJxuYYTC/rpc",
+    "dex": "https://rpc.dev.satschel.com/ext/bc/fuQP6UFQnz7nFMD4AJFN37fkNET51XYwqz6Xzv5Ri3KGX6ZfA/rpc",
+    "fhe": "https://rpc.dev.satschel.com/ext/bc/QYRESBcAWFpW173hmvKPpdQJzJP4qBXaeoM9pk5fpzD6TenBw/rpc"
+  },
+  "bootstrappedAt": "2026-04-09T14:54:28Z"
+}
