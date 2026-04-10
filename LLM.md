@@ -65,9 +65,70 @@ Post-migration, the Liquidity EVM should hold:
 | Testnet | 8675310 |
 | Devnet | 8675311 |
 
+## Genesis Alloc Generator (2026-04-09)
+
+`cmd/genesis-alloc/` generates a Lux EVM genesis alloc JSON from an Avalanche snapshot.
+Each SecurityToken gets a deterministic address, every holder's balanceOf is pre-set in
+storage slots, totalSupply matches sum of all balances, and deployer gets MINTER_ROLE +
+DEFAULT_ADMIN_ROLE via OZ 5.x ERC-7201 AccessControl storage layout.
+
+```bash
+go run ./cmd/genesis-alloc/ \
+  --snapshot ~/work/liquidity/state/chain/snapshots/SNAPSHOT_82552152.json \
+  --output genesis-alloc.json \
+  --chain-id 8675309 \
+  --manifest ~/work/liquidity/contracts/deployments/mainnet-20260327.json \
+  --horse-manifest ~/work/liquidity/contracts/deployments/horse-deploy-mainnet-1775784137.json
+```
+
+Snapshot format: 90 holders, 26 tokens, 521 positions, $70,794 USDL total.
+
+### ERC20 Storage Layout (OZ 5.x non-upgradeable)
+
+- Slot 0: `_balances` mapping
+- Slot 2: `_totalSupply`
+- `balanceOf[addr]` = `keccak256(abi.encode(addr, uint256(0)))`
+- AccessControl base = `keccak256("openzeppelin.storage.AccessControl") - 1`
+
+### Token Addresses
+
+Uses existing manifest addresses from deployments/. Tokens not in any manifest
+get a deterministic CREATE2 address (salt = keccak256(symbol)).
+
+## Hourly Mint (2026-04-09)
+
+`cmd/hourly-mint/` diffs two snapshots and mints only new/increased positions.
+Uses `cast send` for signing. Idempotent (checks balanceOf before minting).
+
+```bash
+go run ./cmd/hourly-mint/ \
+  --previous SNAPSHOT_OLD.json \
+  --current SNAPSHOT_NEW.json \
+  --rpc http://... \
+  --private-key $KEY \
+  --dry-run  # safe preview
+```
+
+Rules: monotonically increasing only. Decreased positions = no action.
+
+## Chain Rebuild Script
+
+`scripts/rebuild-chain.sh` orchestrates a full chain rebuild:
+1. Build genesis-alloc
+2. Extract bytecodes from existing chain (via cast)
+3. Generate alloc from snapshot
+4. Merge into evm.json
+5. Stop nodes, delete PVCs, update ConfigMap
+6. Restart nodes, verify balances
+
+```bash
+./scripts/rebuild-chain.sh --env mainnet --snapshot /path/to/SNAPSHOT.json --dry-run
+```
+
 ## Related Repos
 
 | Repo | Purpose |
 |------|---------|
 | `~/work/liquidity/node/` | LQDTY EVM node binary |
 | `~/work/liquidity/contracts/` | Solidity contracts (SubstrateImporter, SubstrateMigration) |
+| `~/work/liquidity/state/` | Production state snapshots + hourly workflow |
